@@ -2201,3 +2201,196 @@ main_menu() {
 
 # Run the main menu
 main_menu
+
+
+
+------------------------------------any shell scripting program mine
+●	Program 1: Print Sum of Digits of a given number using command line argument
+Code: 
+if [ $# -ne 1 ]; then
+ echo "Usage: $0 <number>"
+ exit 1
+fi
+sum=0
+for (( i=0; i<${#1}; i++ )); do
+ digit=${1:$i:1}
+ sum=$((sum + digit))
+done
+echo "Sum of digits: $sum"
+
+Output: 
+anjalik@anjalik-VirtualBox:~/Desktop/oslabs$ sh Problem1.sh 123451
+Sum of digits: 16
+
+●	Program 2: Write a shell script using function for following:
+1)average of given numbers 
+2) Max  digit from given number and 
+3) min digit  from given number
+Code: 
+average() {
+ sum=0
+ for num in "$@"; do
+   sum=$((sum + num))
+ done
+ echo "Average: $((sum / $#))"
+}
+max_digit() {
+ max=0
+ for (( i=0; i<${#1}; i++ )); do
+   digit=${1:$i:1}
+   if [ $digit -gt $max ]; then
+     max=$digit
+   fi
+ done
+ echo "Max digit: $max"
+}
+min_digit() {
+ min=9
+ for (( i=0; i<${#1}; i++ )); do
+   digit=${1:$i:1}
+   if [ $digit -lt $min ]; then
+     min=$digit
+   fi
+ done
+ echo "Min digit: $min"
+}
+average 10 20 30
+max_digit 12345
+min_digit 12345
+
+Output: 
+anjalik@anjalik-VirtualBox:~/Desktop/oslabs$ sh Problem2.sh      
+Average: 20
+Max digit: 5
+Min digit: 1
+
+●	Program 3: Perform sorting on given array elements
+Code:
+bubble_sort() {
+   local arr=("$@")
+   local n=${#arr[@]}
+   for ((i = 0; i < n - 1; i++)); do
+       for ((j = 0; j < n - i - 1; j++)); do
+           if [ ${arr[j]} -gt ${arr[$((j + 1))]} ]; then
+               # Swap elements
+               temp=${arr[j]}
+               arr[j]=${arr[$((j + 1))]}
+               arr[$((j + 1))]=$temp
+           fi
+       done
+   done
+   echo "${arr[@]}"
+}
+
+echo "Enter array elements (separated by space):"
+read -r -a array
+
+echo "Original array: ${array[@]}"
+sorted_array=($(bubble_sort "${array[@]}"))
+echo "Sorted array: ${sorted_array[@]}"
+
+Output: 
+anjalik@anjalik-VirtualBox:~/Desktop/oslabs$ sh Problem3.sh
+Enter array elements (separated by space):
+1 8 3 5 7 3
+Original array: 1 8 3 5 7 3
+Sorted array: 1 3 3 5 7 8
+●	Program 4: Program to find factorial of a given number with and without recursion
+Code:
+factorial_iterative() {
+   local n=$1
+   local result=1
+   for ((i=1; i<=n; i++)); do
+       result=$((result * i))
+   done
+   echo $result
+}
+factorial_recursive() {
+   local n=$1
+   if [ $n -eq 0 ] || [ $n -eq 1 ]; then
+       echo 1
+   else
+       echo $((n * $(factorial_recursive $((n-1)))))
+   fi
+}
+
+read -p "Enter a number: " number
+if [[ ! $number =~ ^[0-9]+$ ]] || [ $number -lt 0 ]; then
+   echo "Invalid input. Please enter a non-negative integer."
+   exit 1
+fi
+echo "Factorial of $number (iterative): $(factorial_iterative $number)"
+echo "Factorial of $number (recursive): $(factorial_recursive $number)"
+
+Output: 
+anjalik@anjalik-VirtualBox:~/Desktop/oslabs$ sh Problem4.sh
+Enter a number: 5
+Factorial of 5 (iterative): 120
+Factorial of 5 (recursive): 120
+
+●	Program 5: Program to check file type and permission for a given file
+	Code:
+if [ $# -eq 0 ]; then
+   echo "Please provide a filename as an argument."
+   exit 1
+fi
+filename=$1
+if [ -e "$filename" ]; then
+   echo "File exists"
+   if [ -f "$filename" ]; then
+       echo "It is a regular file"
+   elif [ -d "$filename" ]; then
+       echo "It is a directory"
+   elif [ -L "$filename" ]; then
+       echo "It is a symbolic link"
+   fi
+   permissions=$(ls -l "$filename" | cut -d " " -f1)
+   echo "Permissions: $permissions"
+   if [ -r "$filename" ]; then
+       echo "Read permission: Yes"
+   else
+       echo "Read permission: No"
+   fi
+   if [ -w "$filename" ]; then
+       echo "Write permission: Yes"
+   else
+       echo "Write permission: No"
+   fi
+   if [ -x "$filename" ]; then
+       echo "Execute permission: Yes"
+   else
+       echo "Execute permission: No"
+   fi
+else
+   echo "File does not exist"
+fi
+
+
+	Output:
+anjalik@anjalik-VirtualBox:~/Desktop/oslabs$ sh Problem5.sh Problem3.sh
+File exists
+It is a regular file
+Permissions: -rw-r--r--@
+Read permission: Yes
+Write permission: Yes
+Execute permission: No
+
+Program 6:  Check entered string is palindrome or not?
+Code:
+is_palindrome() {
+   local str=$1
+   local length=${#str}
+   for (( i=0; i<length/2; i++ )); do
+       if [ "${str:i:1}" != "${str:length-i-1:1}" ]; then
+           echo "The string '$str' is not a palindrome."
+           return
+       fi
+   done
+   echo "The string '$str' is a palindrome."
+}
+
+echo "Enter a string:"
+read input_string
+
+is_palindrome "$input_string"
+
